@@ -1,171 +1,192 @@
-<%- include('partials/header', { title: episode.title + ' - ZANNIME' }) %>
+<%- include('partials/header', { title: episode.title + ' - DEXANIME' }) %>
 
-<div class="container my-5">
-  <h1 class="display-5 mb-4"><%= episode.title %></h1>
+  <div class="container my-5">
+    <h1 class="display-5 mb-4">
+      <%= episode.title %>
+    </h1>
 
-  <div class="row">
-    <div class="col-md-12">
-      <div id="iframe-container" class="ratio ratio-16x9 mb-4 position-relative">
-        <div id="loading-spinner" class="d-flex justify-content-center align-items-center position-absolute top-0 bottom-0 start-0 end-0 bg-light">
-          <div class="spinner-border text-black" role="status">
-            <span class="visually-hidden">Loading...</span>
+    <div class="row">
+      <div class="col-md-12">
+        <div id="iframe-container" class="ratio ratio-16x9 mb-4 position-relative">
+          <div id="loading-spinner"
+            class="d-flex justify-content-center align-items-center position-absolute top-0 bottom-0 start-0 end-0 bg-light">
+            <div class="spinner-border text-black" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
+          <iframe id="streaming-iframe" class="d-none" src="<%= episode.defaultStreamingUrl %>" title="Streaming Player"
+            allowfullscreen></iframe>
         </div>
-        <iframe id="streaming-iframe" class="d-none" src="<%= episode.defaultStreamingUrl %>" title="Streaming Player" allowfullscreen></iframe>
-      </div>
 
-      <div class="mb-4">
-        <label for="streaming-source" class="form-label">Choose Streaming Source:</label>
-        <select id="streaming-source" class="form-select">
-          <option value="default">Default Source</option>
-          <% if (episode.server && episode.server.qualities) { %>
-            <% episode.server.qualities.forEach(quality => { %>
-              <% quality.serverList.forEach(server => { %>
-                <option value="<%= server.serverId %>"><%= server.title %> - <%= quality.title %></option>
-              <% }) %>
-            <% }) %>
-          <% } %>
-        </select>
-      </div>
+        <div class="mb-4">
+          <label for="streaming-source" class="form-label">Choose Streaming Source:</label>
+          <select id="streaming-source" class="form-select">
+            <option value="default">Default Source</option>
+            <% if (episode.server && episode.server.qualities) { %>
+              <% episode.server.qualities.forEach(quality=> { %>
+                <% quality.serverList.forEach(server=> { %>
+                  <option value="<%= server.serverId %>">
+                    <%= server.title %> - <%= quality.title %>
+                  </option>
+                  <% }) %>
+                    <% }) %>
+                      <% } %>
+          </select>
+        </div>
 
-      <div class="d-flex justify-content-between mb-4">
-        <% if (episode.prevEpisode) { %>
-          <a href="/<%= locals.currentSource %>/episode/<%= episode.prevEpisode.episodeId %>" class="btn btn-dark">
-            <i class="bi bi-arrow-left me-1"></i>Previous Episode
-          </a>
-        <% } else { %>
-          <span class="btn btn-secondary disabled">Previous Episode</span>
-        <% } %>
+        <div class="d-flex justify-content-between mb-4">
+          <% if (episode.prevEpisode) { %>
+            <a href="/<%= locals.currentSource %>/episode/<%= episode.prevEpisode.episodeId %>" class="btn btn-dark">
+              <i class="bi bi-arrow-left me-1"></i>Previous Episode
+            </a>
+            <% } else { %>
+              <span class="btn btn-secondary disabled">Previous Episode</span>
+              <% } %>
 
-        <% if (episode.nextEpisode) { %>
-          <a href="/<%= locals.currentSource %>/episode/<%= episode.nextEpisode.episodeId %>" class="btn btn-dark">
-            Next Episode<i class="bi bi-arrow-right ms-1"></i>
-          </a>
-        <% } else { %>
-          <span class="btn btn-secondary disabled">Next Episode</span>
-        <% } %>
-      </div>
+                <% if (episode.nextEpisode) { %>
+                  <a href="/<%= locals.currentSource %>/episode/<%= episode.nextEpisode.episodeId %>"
+                    class="btn btn-dark">
+                    Next Episode<i class="bi bi-arrow-right ms-1"></i>
+                  </a>
+                  <% } else { %>
+                    <span class="btn btn-secondary disabled">Next Episode</span>
+                    <% } %>
+        </div>
 
-      <% if (episode.standardizedDownloads) { %>
-        <h3 class="mb-3">Download Links</h3>
+        <% if (episode.standardizedDownloads) { %>
+          <h3 class="mb-3">Download Links</h3>
 
-        <% if (episode.standardizedDownloads.isSamehadakuFormat) { %>
-          <div class="accordion" id="downloadAccordion">
-            <% episode.standardizedDownloads.formats.forEach((format, formatIndex) => { %>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button <%= formatIndex > 0 ? 'collapsed' : '' %>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= formatIndex %>" aria-expanded="<%= formatIndex === 0 ? 'true' : 'false' %>" aria-controls="collapse<%= formatIndex %>">
-                    <%= format.title %>
-                  </button>
-                </h2>
-                <div id="collapse<%= formatIndex %>" class="accordion-collapse collapse <%= formatIndex === 0 ? 'show' : '' %>" data-bs-parent="#downloadAccordion">
-                  <div class="accordion-body">
-                    <div class="table-responsive">
-                      <table class="table table-bordered align-middle">
-                        <thead class="table-dark">
-                          <tr>
-                            <th scope="col">Quality</th>
-                            <th scope="col">Download Links</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <% format.qualities.forEach(quality => { %>
+          <% if (episode.standardizedDownloads.isSamehadakuFormat) { %>
+            <div class="accordion" id="downloadAccordion">
+              <% episode.standardizedDownloads.formats.forEach((format, formatIndex)=> { %>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button <%= formatIndex > 0 ? 'collapsed' : '' %>" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#collapse<%= formatIndex %>"
+                      aria-expanded="<%= formatIndex === 0 ? 'true' : 'false' %>"
+                      aria-controls="collapse<%= formatIndex %>">
+                      <%= format.title %>
+                    </button>
+                  </h2>
+                  <div id="collapse<%= formatIndex %>"
+                    class="accordion-collapse collapse <%= formatIndex === 0 ? 'show' : '' %>"
+                    data-bs-parent="#downloadAccordion">
+                    <div class="accordion-body">
+                      <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                          <thead class="table-dark">
                             <tr>
-                              <td class="fw-bold">
-                                <span class="badge bg-dark fs-6"><%= quality.title %></span>
-                              </td>
-                              <td>
-                                <div class="d-flex flex-wrap gap-2">
-                                  <% quality.urls.forEach(url => { %>
-                                    <a href="<%= url.url %>" target="_blank" class="btn btn-sm btn-outline-dark">
-                                      <i class="bi bi-download me-1"></i><%= url.title %>
-                                    </a>
-                                  <% }) %>
-                                </div>
-                              </td>
+                              <th scope="col">Quality</th>
+                              <th scope="col">Download Links</th>
                             </tr>
-                          <% }) %>
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            <% format.qualities.forEach(quality=> { %>
+                              <tr>
+                                <td class="fw-bold">
+                                  <span class="badge bg-dark fs-6">
+                                    <%= quality.title %>
+                                  </span>
+                                </td>
+                                <td>
+                                  <div class="d-flex flex-wrap gap-2">
+                                    <% quality.urls.forEach(url=> { %>
+                                      <a href="<%= url.url %>" target="_blank" class="btn btn-sm btn-outline-dark">
+                                        <i class="bi bi-download me-1"></i>
+                                        <%= url.title %>
+                                      </a>
+                                      <% }) %>
+                                  </div>
+                                </td>
+                              </tr>
+                              <% }) %>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            <% }) %>
-          </div>
-        <% } else { %>
-          <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-              <thead class="table-dark">
-                <tr>
-                  <th scope="col">Quality</th>
-                  <th scope="col">Size</th>
-                  <th scope="col">Download Links</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% episode.standardizedDownloads.qualities.forEach(quality => { %>
-                  <tr>
-                    <td class="fw-bold">
-                      <span class="badge bg-dark fs-6"><%= quality.title %></span>
-                    </td>
-                    <td><%= quality.size || 'Unknown' %></td>
-                    <td>
-                      <div class="d-flex flex-wrap gap-2">
-                        <% quality.urls.forEach(url => { %>
-                          <a href="<%= url.url %>" target="_blank" class="btn btn-sm btn-outline-dark">
-                            <i class="bi bi-download me-1"></i><%= url.title %>
-                          </a>
-                        <% }) %>
-                      </div>
-                    </td>
-                  </tr>
                 <% }) %>
-              </tbody>
-            </table>
-          </div>
-        <% } %>
-      <% } else { %>
-        <div class="alert alert-info">
-          <i class="bi bi-info-circle-fill me-2"></i>Download links are not available for this episode.
-        </div>
-      <% } %>
+            </div>
+            <% } else { %>
+              <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                  <thead class="table-dark">
+                    <tr>
+                      <th scope="col">Quality</th>
+                      <th scope="col">Size</th>
+                      <th scope="col">Download Links</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% episode.standardizedDownloads.qualities.forEach(quality=> { %>
+                      <tr>
+                        <td class="fw-bold">
+                          <span class="badge bg-dark fs-6">
+                            <%= quality.title %>
+                          </span>
+                        </td>
+                        <td>
+                          <%= quality.size || 'Unknown' %>
+                        </td>
+                        <td>
+                          <div class="d-flex flex-wrap gap-2">
+                            <% quality.urls.forEach(url=> { %>
+                              <a href="<%= url.url %>" target="_blank" class="btn btn-sm btn-outline-dark">
+                                <i class="bi bi-download me-1"></i>
+                                <%= url.title %>
+                              </a>
+                              <% }) %>
+                          </div>
+                        </td>
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+              </div>
+              <% } %>
+                <% } else { %>
+                  <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>Download links are not available for this episode.
+                  </div>
+                  <% } %>
+      </div>
     </div>
   </div>
-</div>
 
-<%- include('partials/footer') %>
+  <%- include('partials/footer') %>
 
-<script src="/js/bootstrap.bundle.min.js"></script>
-<script>
-  document.getElementById('streaming-source').addEventListener('change', async function() {
-    const selectedValue = this.value;
-    const iframe = document.getElementById('streaming-iframe');
-    const spinner = document.getElementById('loading-spinner');
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.getElementById('streaming-source').addEventListener('change', async function () {
+        const selectedValue = this.value;
+        const iframe = document.getElementById('streaming-iframe');
+        const spinner = document.getElementById('loading-spinner');
 
-    spinner.classList.remove('d-none');
-    iframe.classList.add('d-none');
+        spinner.classList.remove('d-none');
+        iframe.classList.add('d-none');
 
-    if (selectedValue === "default") {
-      iframe.src = "<%= episode.defaultStreamingUrl %>";
-    } else {
-      const response = await fetch(`/server-url?serverId=${selectedValue}`);
-      const data = await response.json();
-      if (data.url) {
-        iframe.src = data.url;
-      } else {
-        console.error('Error fetching server URL');
-      }
-    }
-  });
+        if (selectedValue === "default") {
+          iframe.src = "<%= episode.defaultStreamingUrl %>";
+        } else {
+          const response = await fetch(`/server-url?serverId=${selectedValue}`);
+          const data = await response.json();
+          if (data.url) {
+            iframe.src = data.url;
+          } else {
+            console.error('Error fetching server URL');
+          }
+        }
+      });
 
-  document.getElementById('streaming-iframe').addEventListener('load', function() {
-    const spinner = document.getElementById('loading-spinner');
-    const iframe = document.getElementById('streaming-iframe');
+      document.getElementById('streaming-iframe').addEventListener('load', function () {
+        const spinner = document.getElementById('loading-spinner');
+        const iframe = document.getElementById('streaming-iframe');
 
-    spinner.classList.add('d-none');
-    iframe.classList.remove('d-none');
-  });
-</script>
-</body>
-</html>
+        spinner.classList.add('d-none');
+        iframe.classList.remove('d-none');
+      });
+    </script>
+    </body>
+
+    </html>

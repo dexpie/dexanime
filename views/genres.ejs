@@ -1,16 +1,19 @@
-<%- include('partials/header', { title: 'Genres - ZANNIME' }) %>
-<div class="container">
-  <h1 class="mt-4">Genres</h1>
-  <ul class="list-group">
-    <% genres.genreList.forEach(genre => { %>
-      <li class="list-group-item">
-        <a class="text-black" href="/<%= locals.currentSource %>/genres/<%= genre.genreId %>"><%= genre.title %></a>
-      </li>
-    <% }) %>
-  </ul>
-</div>
-<br>
-<%- include('partials/footer') %>
-<script src="/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<%- include('partials/header', { title: 'Genres - DEXANIME' }) %>
+  <div class="container">
+    <h1 class="mt-4">Genres</h1>
+    <ul class="list-group">
+      <% genres.genreList.forEach(genre=> { %>
+        <li class="list-group-item">
+          <a class="text-black" href="/<%= locals.currentSource %>/genres/<%= genre.genreId %>">
+            <%= genre.title %>
+          </a>
+        </li>
+        <% }) %>
+    </ul>
+  </div>
+  <br>
+  <%- include('partials/footer') %>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    </body>
+
+    </html>

@@ -15,11 +15,16 @@ export const makeApiRequest = async (req, endpoint, params = {}) => {
   const url = `${process.env.API_URL}/${source}${endpoint}`;
 
   try {
-    return await ky.get(url, { searchParams: params }).json();
+    return await ky.get(url, {
+      searchParams: params,
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; DEXANIME/1.0; +https://dexanime.local)",
+      },
+    }).json();
   } catch (error) {
     // Log the specific endpoint and error
-    console.error(`Error fetching from ${url}:`, error.message); 
+    console.error(`Error fetching from ${url}:`, error.message);
     // Return a consistent structure on error
-    return { data: null, pagination: {} }; 
+    return { data: null, pagination: {} };
   }
 };

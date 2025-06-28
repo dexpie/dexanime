@@ -9,6 +9,7 @@ import {
   episodeRoutes,
   scheduleRoutes,
   settingsRoutes,
+  otakudesuRoutes,
 } from "./routes/Routes.js";
 import { fetchAllAnimeData } from "./services/animeService.js";
 import { getCurrentSource, SOURCES } from "./services/sourceService.js";
@@ -71,6 +72,7 @@ app.use(
   episodeRoutes,
   scheduleRoutes,
   settingsRoutes,
+  otakudesuRoutes,
 );
 
 // 404 error handler - must be after all routes
@@ -81,16 +83,16 @@ app.use((req, res) => {
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).render('404', { 
-    error: { 
-      status: 500, 
-      message: 'Internal server error' 
-    } 
+  res.status(500).render('404', {
+    error: {
+      status: 500,
+      message: 'Internal server error'
+    }
   });
 });
 
-app.listen(port, () =>
-  console.log(`Server is running on http://localhost:${port}`),
-);
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
 
 setInterval(fetchAllSourcesData, 60 * 60 * 1000);

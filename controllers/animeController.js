@@ -13,13 +13,12 @@ export const getOngoingAnime = async (req, res) => {
 
 export const getAnimeDetails = async (req, res) => {
   const { slug, source } = req.params;
-  
   if (source && Object.values(SOURCES).includes(source)) {
     req.cookies.animeSource = source;
   }
-
   const anime = await fetchAnimeDetails(req, slug);
-  if (anime) {
+  console.log("Anime detail response:", anime);
+  if (anime && anime.title) {
     res.render("detail", { anime });
   } else {
     res.status(404).send("Anime not found");
